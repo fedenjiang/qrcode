@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>qrcode</title>
+    <script src="./jquery/jquery.min.js"></script>
+</head>
+<body>
+<div>
+    <div id="left" style="float:left;width:30%">
+        <div>
+            <p>输入信息生成二维码</p>
+            <input type="checkbox" id="addLogo"/>LOGO
+            <select id="ecl" name="select" style="width: auto" readonly="">
+                <option value="L">L</option>
+                <option value="M">M</option>
+                <option value="Q">Q</option>
+                <option value="H">H</option>
+            </select>ECL
+            <select id="shape" name="select" style="width: auto" readonly="">
+                <option value="RECT">矩形</option>
+                <option value="CIRCLE">圆形</option>
+                <option value="TRIANGLE">三角形</option>
+                <option value="SEXANGLE">六边形</option>
+            </select>SHAPE
+            <select id="color" name="select" style="width: auto" readonly="">
+                <option value="black">黑色</option>
+                <option value="colour">彩色</option>
+            </select>COLOR
+            <input id="qrcodename" />二维码名称
+            <textarea id="qrtext" style="width: 300px;height:180px"></textarea>
+            <input type="button" value="生成" onclick="getQrcode()"/>
+        </div>
+        <div><img id="images"></div>
+    </div>
+    <div id="right" style="float:left;width:70%;">
+        <div>
+            <p>解析本地二维码图片</p>
+            <input type="button" value="解析" onclick="analyze()"/>
+        </div>
+
+        <div id="result" style="height:500px; overflow: scroll">
+
+        </div>
+    </div>
+</div>
+<script>
+    function getQrcode() {
+        var qrtext = $("#qrtext").val();
+        var qrcodename = $("#qrcodename").val();
+        var addLogo = $("#addLogo").prop("checked");
+        var ecl = $("#ecl").val();
+        var shape = $("#shape").val();
+        var color = $("#color").val();
+        $(function () {
+            $.post("/getqrcode", {
+                qrcodename: qrcodename,
+                qrtext: qrtext,
+                addLogo: addLogo,
+                ecl:ecl,
+                shape:shape,
+                color:color
+            }, function (result) {
+                $("#images").attr("src", "data:image/gif;base64," + result);
+            })
+        })
+    }
+    function analyze() {
+        $(function () {
+            $.post("/analyze", {
+            }, function (result) {
+//                $("#result").append(result);
+                $("#result").html(result);
+            })
+        })
+    }
+</script>
+</body>
+</html>
