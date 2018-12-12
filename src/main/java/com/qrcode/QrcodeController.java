@@ -17,6 +17,11 @@ import java.util.List;
 @Controller
 public class QrcodeController {
 
+    @RequestMapping("/qrcodeByJs")
+    public String qrcodeByJs(){
+        return "qrcodeByJs";
+    }
+
     @RequestMapping("/qrcode")
     public String qrcode(){
         return "qrcode";

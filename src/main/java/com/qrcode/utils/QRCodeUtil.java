@@ -4,6 +4,8 @@ import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +32,6 @@ public class QRCodeUtil {
     private static final int WIDTH = 60;
     // LOGO高度
     private static final int HEIGHT = 60;
-
     /**
      * 生成二维码的方法
      *
@@ -171,13 +172,12 @@ public class QRCodeUtil {
      */
     private static void insertImage(BufferedImage source, String imgPath,
                                     boolean needCompress) throws Exception {
-//        File file = new File(imgPath);
         File file = ResourceUtils.getFile("classpath:static/images/"+imgPath);
         if (!file.exists()) {
             System.err.println("" + imgPath + "   该文件不存在！");
             return;
         }
-        Image src = ImageIO.read(new File(imgPath));
+        Image src = ImageIO.read(file);
         int width = src.getWidth(null);
         int height = src.getHeight(null);
         if (needCompress) { // 压缩LOGO
@@ -191,7 +191,9 @@ public class QRCodeUtil {
                     Image.SCALE_SMOOTH);
             BufferedImage tag = new BufferedImage(width, height,
                     BufferedImage.TYPE_INT_RGB);
-            Graphics g = tag.getGraphics();
+            Graphics2D g = tag.createGraphics();
+            g.setComposite(AlphaComposite.Src);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);//抗锯齿
             g.drawImage(image, 0, 0, null); // 绘制缩小后的图
             g.dispose();
             src = image;
@@ -274,7 +276,9 @@ public class QRCodeUtil {
         Hashtable hints = new Hashtable();
         hints.put(DecodeHintType.CHARACTER_SET, CHARSET);
         hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+//        hints.put(DecodeHintType.POSSIBLE_FORMATS, BarcodeFormat.QR_CODE);
         result = new MultiFormatReader().decode(bitmap, hints);
+//        result = new QRCodeReader().decode(bitmap, hints);
         String resultStr = result.getText();
         return resultStr;
     }

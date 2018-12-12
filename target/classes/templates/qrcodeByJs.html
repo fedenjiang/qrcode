@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="./jquery/jquery.min.js"></script>
+    <script src="./qrcode/jquery.qrcode.js"></script>
+</head>
+<body>
+<div id="qrcode">
+</div>
+<script type="text/javascript">
+    $("#qrcode").qrcode({
+        render: "canvas", // 渲染方式有table方式和canvas方式
+        width: 256,   //默认宽度
+        height: 256, //默认高度
+        text: "你好", //二维码内容
+        typeNumber: -1,   //计算模式一般默认为-1
+        correctLevel: 2, //二维码纠错级别QRErrorCorrectLevel={L:1,M:0,Q:3,H:2}
+        background: "#ffffff",  //背景色-背景颜色
+        foreground: "#000000",  //前景色-二维码颜色
+        src: './images/circle-logo.jpg'  //二维码logo
+    });
+</script>
+</body>
+</html>
